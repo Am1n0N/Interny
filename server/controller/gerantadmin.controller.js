@@ -40,6 +40,28 @@ const gerantadminController = {
         });
 
     },
+    profile: async (req, res) => {
+        const context = {
+            user: req.session.user || null,
+        };
+        const id = req.params.id;
+        console.log(id);
+        pool.getConnection((err, connection) => {
+            //join utilisateur and societe
+            connection.query('SELECT * FROM utilisateur u INNER JOIN societe s ON u.id = s.gerant_id WHERE u.id = ?', [id], (err, rows) => {
+                connection.release();
+                if (!err) {
+                    res.render('profil-gerant', { rows, data :{ context } });
+                } else {
+                    console.log(err);
+                }
+                console.log('the data from user table: \n', rows);
+            });
+            
+        });
+    },
+
+
     // Find  offre by search
     find: async (req, res) => {
 
@@ -49,7 +71,7 @@ const gerantadminController = {
 
             let searchTerm = req.body.search
             // User the connection
-            connection.query('SELECT * FROM utilisateur u INNER JOIN societe s  WHERE u.type_util = "gérant" AND nom LIKE ? OR prenom LIKE ? OR email LIKE ? ', ['%' + searchTerm + '%','%' + searchTerm + '%', '%' + searchTerm + '%'], (err, rows) => {
+            connection.query('SELECT * FROM utilisateur u INNER JOIN societe s  WHERE u.type_util = "gérant" AND nom LIKE ? OR prenom LIKE ? OR email LIKE ? ', ['%' + searchTerm + '%', '%' + searchTerm + '%', '%' + searchTerm + '%'], (err, rows) => {
 
                 // when done with the connection, release it
                 connection.release();
@@ -70,32 +92,32 @@ const gerantadminController = {
     },
 
     create: async (req, res) => {
-        console.log("Request body: ",req.body);
-        
+        console.log("Request body: ", req.body);
+
         const { nom, prenom, email } = req.body;
         const mot_pass = bcrypt.hashSync("password", 10);
         const type_util = "gérant";
         pool.getConnection((err, connection) => {
-          if (err) throw err;
-          console.log('connected as ID' + connection.threadId);
-    
-          let searchTerm = req.body.search
-          // User the connection
-          connection.query('INSERT INTO utilisateur SET nom = ?, prenom = ?, email = ?, mot_pass = ?, type_util = ?', [nom, prenom, email, mot_pass, type_util], (err, rows) => {
-            // when done with the connection, release it
-            connection.release();
-    
-            if (!err) {
-              res.render('ajoute-gerantadmin');
-            } else {
-              console.log(err);
-            }
-    
-    
-    
-          });
+            if (err) throw err;
+            console.log('connected as ID' + connection.threadId);
+
+            let searchTerm = req.body.search
+            // User the connection
+            connection.query('INSERT INTO utilisateur SET nom = ?, prenom = ?, email = ?, mot_pass = ?, type_util = ?', [nom, prenom, email, mot_pass, type_util], (err, rows) => {
+                // when done with the connection, release it
+                connection.release();
+
+                if (!err) {
+                    res.render('ajoute-gerantadmin');
+                } else {
+                    console.log(err);
+                }
+
+
+
+            });
         });
-      },
+    },
 
     editform: async (req, res) => {
         res.render('modifie-gerantadmin');

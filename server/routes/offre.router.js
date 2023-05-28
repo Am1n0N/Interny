@@ -13,10 +13,15 @@ router.post("/postule",offreController.postule);
 router.get("/forms-entreprise",offreController.form);
 router.post("/forms-entreprise",offreController.create);
 
+router.get("/Mon_offre/:id",offreController.findoffrebyid)
 
+router.get("/modifie-offre/:id",offreController.editform)
 
 router.post("/edit-offreadmin/:id",offreController.edit);
 router.get("/Delete-offreadmin/:id",offreController.delete);
+
+router.get("/Delete-offre/:id",offreController.deleteoffre);
+router.get("/edit-offre/:id",offreController.editoffre);
 
 
 module.exports = router;

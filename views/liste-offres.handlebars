@@ -50,26 +50,21 @@
   <div class="mt-2">
     <a href="https://stackdiary.com/"
       class="text-2xl font-bold text-gray-700 dark:text-white hover:text-gray-600 dark:hover:text-gray-200 hover:underline">{{this.titre}}</a>
-    <p class="mt-2 text-gray-600 dark:text-gray-300">{{this.url}}</p>
+    <p class="mt-2 text-gray-600 dark:text-gray-300">{{this.descpt}}</p>
   </div>
   <div class="flex items-center ml-auto">
-    <img src="/uploads/avatar-1682183209501.png" alt="Author Photo"
+    <img src="/uploads/{{this.url}}" alt="Author Photo"
       class="hidden object-cover w-10 h-10 mx-4 rounded-full sm:block">
     <a class="font-bold text-gray-700 cursor-pointer dark:text-gray-200">{{this.nom_societe}}</a>
   </div>
   <div class="flex items-center justify-start md:justify-between mt-4">
     <div>
-      <a href="/societe/{{this.gerantid}}"
-        class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-2 rounded">Read more ⟶</a>
+      <a href="/offre/Delete-offre/{{this.id}}"
+        class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-2 rounded">Delete</a>
       &nbsp;
+      <a href="/offre/modifie-offre/{{this.id}}"
+        class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-2 rounded">Update</a>
 
-      <form method="post" action="/offre/postule/">
-        <input type="hidden" name="id_offre" value="{{this.id}}">
-        <input type="hidden" name="id_user" value="{{this.id_user}}">
-        <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-2 rounded">
-          Postule
-        </button>
-      </form>
     </div>
   </div>
 

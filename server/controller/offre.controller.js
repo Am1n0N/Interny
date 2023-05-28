@@ -36,6 +36,36 @@ const offreController = {
       });
     });
   },
+  // Find offre by id
+  findoffrebyid: async (req, res) => {
+    // find offre by id of user
+    const context = {
+      user: req.session.user || null,
+    };
+    // join offre and societe table and 
+    pool.getConnection((err, connection) => {
+      if (err) throw err;
+      console.log('connected as ID' + connection.threadId);
+      // get offers with pic from societe table
+      const id = req.params.id;
+      const sql = 'SELECT o.*, s.url FROM offre o INNER JOIN societe s ON o.societe_id = s.id WHERE s.gerant_id = ?';
+      const params = [id];
+      connection.query(sql, params, (err, rows) => {
+        // when done with the connection, release it
+        connection.release();
+        if (!err) {
+          res.render('liste-offres', {
+            rows,
+            data: { context }
+          });
+        } else {
+          console.log(err.message);
+        }
+        console.log('the data from user table: \n', rows);
+      });
+    });
+  },
+
 
 
   // View offres
@@ -136,10 +166,42 @@ const offreController = {
             console.log(societe_id);
             pool.query(sqlsociete, [rows.insertId, nom_societe], (err, result) => {
               if (err) throw err;
-              res.render("forms-entreprise", {  data: { context } });
+              res.render("forms-entreprise", { data: { context } });
             });
           }
         }
+      });
+    });
+  },
+  editoffre: async (req, res) => {
+    const context = {
+      user: req.session.user || null,
+    };
+    const { titre, descpt, date_debut, date_fin, dateexp, specialite } = req.body;
+    const id = req.params.id;
+    pool.getConnection(async (err, connection) => {
+      if (err) throw err;
+      const sql = 'update offre SET  titre = ?, descpt = ?, date_debut = ?, date_fin = ?, dateexp = ?, specialite = ? where id = ?';
+      const params = [titre, descpt, date_debut, date_fin, dateexp, specialite, id];
+      // User the connection
+      await new Promise((resolve, reject) => {
+        connection.query(sql, params, (err, result) => {
+          if (!err) {
+            resolve(result);
+          } else {
+            reject(err);
+          }
+        });
+      });
+      connection.query('SELECT * from offre where id = ?', [id], (err, rows) => {
+        // when done with the connection, release it
+        connection.release();
+        if (!err) {
+          res.render('modifie-offre', { rows, data: { context } });
+        } else {
+          console.log(err);
+        }
+        console.log('the data from user table: \n', rows);
       });
     });
   },
@@ -185,6 +247,32 @@ const offreController = {
       });
     })
   },
+  editform: async (req, res) => {
+    const context = {
+      user: req.session.user || null,
+    };
+    const id = req.params.id;
+    pool.getConnection((err, connection) => {
+      if (err) throw err;
+      console.log('connected as ID' + connection.threadId);
+
+      // Use the connection
+      connection.query('SELECT * FROM offre WHERE id = ?', [id], (err, rows) => {
+        // When done with the connection, release it
+        connection.release();
+
+        if (!err) {
+          res.render('modifie-offre',
+            { rows, data: { context } });
+        } else {
+          console.log(err);
+        }
+
+        console.log('the data from offre table: \n', rows);
+
+      });
+    });
+  },
 
   delete: async (req, res) => {
     console.log(req.body);
@@ -221,6 +309,45 @@ const offreController = {
 
       });
     });
-  }
+  },
+  deleteoffre: async (req, res) => {
+    const context = {
+      user: req.session.user || null,
+    };
+    console.log(req.body);
+
+    const id = req.params.id;
+
+    pool.getConnection(async (err, connection) => {
+      if (err) throw err;
+      console.log('connected as ID' + connection.threadId);
+
+      // Use the connection
+      await new Promise((resolve, reject) => {
+        connection.query('DELETE FROM offre WHERE id = ?', [id], (err, result) => {
+          if (err) {
+            reject(err);
+          } else {
+            resolve(result);
+          }
+        });
+
+        connection.query('SELECT * from offre ', (err, rows) => {
+          // when done with the connection, release it
+          connection.release();
+
+          if (!err) {
+            res.render('home', { data: { context } });
+          } else {
+            console.log(err);
+          }
+
+          console.log('the data from edited table: \n', rows);
+
+        });
+
+      });
+    });
+  },
 }
 module.exports = offreController;

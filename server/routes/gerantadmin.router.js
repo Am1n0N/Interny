@@ -15,4 +15,6 @@ router.post("/ajoute-gerantadmin",gerantadminController.create);
 router.get("/modifie-gerantadmin/:id",gerantadminController.edit);
 router.post("/modifie/:id",gerantadminController.update);
 router.get("/supprime/:id",gerantadminController.delete);
+
+router.get("/profile/:id",gerantadminController.profile);
 module.exports = router;

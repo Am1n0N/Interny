@@ -89,7 +89,7 @@
 						<path stroke="none" d="M0 0h24v24H0z" />
 						<path
 							d="M5 4h4l2 5l-2.5 1.5a11 11 0 0 0 5 5l1.5 -2.5l5 2v4a2 2 0 0 1 -2 2a16 16 0 0 1 -15 -15a2 2 0 0 1 2 -2" />
-					</svg> &nbsp; {{this.numçfax}}</p>
+					</svg> &nbsp; {{this.num_fax}}</p>
 				<div class="mx-auto lg:mx-0 w-5/5 pt-3 border-b-2 border-green-600 opacity-25"></div>
 
 				<p class="pt-4 text-base font-bold flex items-center justify-center lg:justify-start"><svg
@@ -133,13 +133,7 @@
 						<line x1="13" y1="16" x2="15" y2="16" />
 					</svg>&nbsp; {{this.descpt_societe}}</p>
 
-				<div class="pt-12 pb-8">
-
-					<button class="bg-green-700 hover:bg-green-900 text-white font-bold py-2 px-4 rounded-full"
-						onclick="/societe/modifie-stagiaire/{{this.id}}" type="submit">
-						<a href="/societe/modifie-stagiaire/{{this.id}}">Modifie Profile</a>
-					</button>
-				</div>
+			
 				<div class="mt-6 pb-16 lg:pb-0 w-4/5 lg:w-full mx-auto flex flex-wrap items-center justify-between">
 					<a class="link" href="#" data-tippy-content="@facebook_handle"><svg
 							class="h-6 fill-current text-gray-600 hover:text-green-700" role="img" viewBox="0 0 24 24"
@@ -200,7 +194,7 @@
 		<!--Img Col-->
 		<div class="w-full lg:w-2/5">
 			<!-- Big profile image for side bar (desktop) -->
-			<img src="/uploads/{{this.avatar}}" alt="Profile image"
+			<img src="/uploads/{{this.url}}" alt="Profile image"
 				class="rounded-none lg:rounded-lg shadow-2xl hidden lg:block">
 			<!-- Image from: http://unsplash.com/photos/MP0IUfwrn0A -->
 
