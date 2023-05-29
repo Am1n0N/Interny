@@ -101,6 +101,7 @@ const societeController = {
         console.log(req.file);
         const { nom_societe, descpt_societe, address_soct, email_soct, telephone, num_fax, activite, ville, code_postale } = req.body;
         const url = req.file;
+        const id = context.user.id
 
 
 
@@ -110,7 +111,7 @@ const societeController = {
 
             let searchTerm = req.body.search
             // User the connection
-            connection.query('INSERT INTO societe SET nom_societe = ?, descpt_societe = ?, address_soct = ?, email_soct = ?, telephone = ?, num_fax = ?, activite = ?, ville = ?, code_postale = ?, url = ?', [nom_societe, descpt_societe, address_soct, email_soct, telephone, num_fax, activite, ville, code_postale, url], (err, rows) => {
+            connection.query('INSERT INTO societe SET nom_societe = ?, descpt_societe = ?, address_soct = ?, email_soct = ?, telephone = ?, num_fax = ?, activite = ?, ville = ?, code_postale = ?, url = ?, gerant_id = ?', [nom_societe, descpt_societe, address_soct, email_soct, telephone, num_fax, activite, ville, code_postale, url, id], (err, rows) => {
                 // when done with the connection, release it
                 connection.release();
 
