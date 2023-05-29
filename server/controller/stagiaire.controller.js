@@ -111,13 +111,14 @@ const stagiaireController = {
     console.log(req.file);
     const { niveau, specialite, etablissement, address, description_stagiaire, telephone } = req.body;
     const avatar = req.file.filename;
+    const id = context.user.id
 
     pool.getConnection((err, connection) => {
       if (err) throw err;
       console.log('connected as ID' + connection.threadId);
 
       console.log(req.body);
-      connection.query('INSERT INTO stagiaire SET niveau = ?, specialite = ?, etablissement = ?, address = ?, description_stagiaire = ?, avatar = ?, telephone = ?', [niveau, specialite, etablissement, address, description_stagiaire, avatar, telephone], (err, rows) => {
+      connection.query('UPDATE stagiaire SET niveau = ?, specialite = ?, etablissement = ?, address = ?, description_stagiaire = ?, avatar = ?, telephone = ? WHERE utilisateur_id = ?', [niveau, specialite, etablissement, address, description_stagiaire, avatar, telephone, id], (err, rows) => {
         // when done with the connection, release it
         connection.release();
 
