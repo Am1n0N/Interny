@@ -44,28 +44,29 @@
 <!-- component -->
 <br>
 <div class="mx-auto w-full max-w-[550px]">
-    <form class="p-10 bg-white rounded-lg drop-shadow-lg space-y-4" method="POST" action="/offre/edit-offre">
+    <form class="p-10 bg-white rounded-lg drop-shadow-lg space-y-4" method="POST"
+        action="/offre/edit-offre/{{ row.id }}">
 
         <!-- Name -->
         <div class="flex flex-col">
             <label for="titre">Titre</label>
-            <input type="text" name="titre" id="titre" value="{{rows.titre}}" required
+            <input type="text" name="titre" id="titre" value="{{row.titre}}" required
                 class="peer border border-slate-400">
 
         </div>
         <!-- specialite -->
         <div class="flex flex-col">
             <label for="specialite">Specialite</label>
-            <input type="specialite" name="specialite" id="specialite" value="{{rows.specialite}}" required
+            <input type="specialite" name="specialite" id="specialite" value="{{row.specialite}}" required
                 class="peer border border-slate-400" />
         </div>
 
         <!-- Description -->
         <div class="flex flex-col">
             <label for="descpt">Description</label>
-            <textarea name="descpt" id="descpt" cols="30" rows="3" required
-                class="peer border border-slate-400"></textarea>
-{{rows.descpt}}
+            <textarea name="descpt" id="descpt" cols="30" row="3" required
+                class="peer border border-slate-400">{{row.descpt}}</textarea>
+            
         </div>
         <!-- date_debut -->
         <div class="flex flex-col">

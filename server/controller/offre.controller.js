@@ -262,8 +262,9 @@ const offreController = {
         connection.release();
 
         if (!err) {
+          const row = rows[0]
           res.render('modifie-offre',
-            { rows, data: { context } });
+            { row, data: { context } });
         } else {
           console.log(err);
         }

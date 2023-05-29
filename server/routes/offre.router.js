@@ -21,7 +21,7 @@ router.post("/edit-offreadmin/:id",offreController.edit);
 router.get("/Delete-offreadmin/:id",offreController.delete);
 
 router.get("/Delete-offre/:id",offreController.deleteoffre);
-router.get("/edit-offre/:id",offreController.editoffre);
+router.post("/edit-offre/:id",offreController.editoffre);
 
 
 module.exports = router;
