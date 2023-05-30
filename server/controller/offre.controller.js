@@ -147,30 +147,21 @@ const offreController = {
     };
     console.log(req.body);
 
-    const { titre, descpt, date_debut, date_fin, dateexp, specialite, nom_societe } = req.body;
-
+    const { titre, descpt, date_debut, date_fin, dateexp, specialite } = req.body;
+    const id = req.session.user.id;
     pool.getConnection((err, connection) => {
       if (err) throw err;
       console.log('connected as ID' + connection.threadId);
-
-      // Use the connection
-      connection.query('INSERT INTO offre SET titre = ?, descpt = ?, date_debut = ?, date_fin = ?, dateexp = ?, specialite = ?, nom_societe = ?', [titre, descpt, date_debut, date_fin, dateexp, specialite, nom_societe], (err, rows) => {
-        // When done with the connection, release it
+      connection.query('INSERT INTO offre SET titre = ?, descpt = ?, date_debut = ?, date_fin = ?, dateexp = ?, specialite = ?, societe_id = (SELECT id FROM societe WHERE gerant_id = ?)', [titre, descpt, date_debut, date_fin, dateexp, specialite, id], (err, rows) => {
+        // when done with the connection, release it
         connection.release();
 
         if (!err) {
-          res.render('forms-entreprise');
+          res.render('forms-entreprise', { data: { context } });
         } else {
-          if (nom_societe === nom_societe) {
-            const sqlsociete = "INSERT INTO societe SET societe_id = ? + id";
-            console.log(societe_id);
-            pool.query(sqlsociete, [rows.insertId, nom_societe], (err, result) => {
-              if (err) throw err;
-              res.render("forms-entreprise", { data: { context } });
-            });
-          }
+          console.log(err);
         }
-      });
+      }); 
     });
   },
   editoffre: async (req, res) => {
