@@ -14,7 +14,7 @@ router.get("/delete/:id",societeController.delete);
 router.post("/modifie-societe/:id",societeController.update);
 
 router.get("/forms-gerant",societeController.form);
-router.post("/forms-gerant",upload.single('url'),societeController.create);
+router.post("/forms-gerant",upload.single('image_societe'),societeController.create);
 
 
 module.exports = router;

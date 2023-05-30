@@ -1,5 +1,5 @@
 const mysql = require('mysql2');
-
+const multer = require('multer');
 
 
 // get ALL offres
@@ -99,8 +99,10 @@ const societeController = {
         };
         console.log(req.body);
         console.log(req.file);
-        const { nom_societe, descpt_societe, address_soct, email_soct, telephone, num_fax, activite, ville, code_postale } = req.body;
-        const url = req.file;
+        const { nom_societe, descpt_societe, address_soct, email_soct, telephone, num_fax, activite, ville, code_postale  } = req.body;
+        // get image from req file
+        const image = req.file.filename;
+        console.log("image", image.filename);
         const id = context.user.id
 
 
@@ -111,7 +113,7 @@ const societeController = {
 
             let searchTerm = req.body.search
             // User the connection
-            connection.query('INSERT INTO societe SET nom_societe = ?, descpt_societe = ?, address_soct = ?, email_soct = ?, telephone = ?, num_fax = ?, activite = ?, ville = ?, code_postale = ?, url = ?, gerant_id = ?', [nom_societe, descpt_societe, address_soct, email_soct, telephone, num_fax, activite, ville, code_postale, url, id], (err, rows) => {
+            connection.query('update societe SET nom_societe = ?, descpt_societe = ?, address_soct = ?, email_soct = ?, telephone = ?, num_fax = ?, activite = ?, ville = ?, code_postale = ?, url = ? WHERE gerant_id = ?', [nom_societe, descpt_societe, address_soct, email_soct, telephone, num_fax, activite, ville, code_postale, image, id], (err, rows) => {
                 // when done with the connection, release it
                 connection.release();
 

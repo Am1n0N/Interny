@@ -79,7 +79,7 @@ const registerController = {
             // Insertion dans la table correspondante en fonction du type_util de l'utilisateur
             switch (type_util) {
               case "gérant":
-                const sqlGerant = "INSERT INTO stagiaire (utilisateur_id,telephone,specialite,etablissement,address,description_stagiaire, avatar) VALUES (?,99999999,'Gérant','Societé','Tozeur,degech','Gérant','avatar-1683285817278.jpg')";
+                const sqlGerant = "INSERT INTO societe (gerant_id) VALUES (?)";
                 pool.query(sqlGerant, [utilisateur_id]);
                 break;
               case "stagiaire":

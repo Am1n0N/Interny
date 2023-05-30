@@ -79,7 +79,7 @@ const offreController = {
       if (err) throw err;
       console.log('connected as ID offer' + connection.threadId);
       // get offers with pic from societe table
-      connection.query('SELECT o.*, s.url , s.utilisateur_id as utilisateurid FROM offre o INNER JOIN societe s ON o.societe_id = s.id', (err, rows) => {
+      connection.query('SELECT o.*, s.url , s.gerant_id as gerantid FROM offre o INNER JOIN societe s ON o.societe_id = s.id', (err, rows) => {
         // when done with the connection, release it
         console.log("rows offer ", rows);
         if (!err) {
@@ -91,6 +91,9 @@ const offreController = {
               // add id to rows from societe table
               const rowsWithUserIDMapped = rows.map(row => {
                 row.id_user = rowsWithUserID[0].id;
+                // formate date 
+                row.date_debut = row.date_debut.toLocaleDateString();
+                row.date_fin = row.date_fin.toLocaleDateString();
                 return row;
               });
               res.render('offre-stage', {
@@ -113,8 +116,12 @@ const offreController = {
 
   // Find  offre by search
   find: async (req, res) => {
+    const context = {
+      user: req.session.user || null,
+    };
 
     pool.getConnection((err, connection) => {
+
       if (err) throw err;
       console.log('connected as ID' + connection.threadId);
 
@@ -123,9 +130,14 @@ const offreController = {
       connection.query('SELECT o.*, s.url, s.nom_societe FROM offre o INNER JOIN societe s ON o.societe_id = s.id where o.specialite like ? OR o.titre like ? OR s.nom_societe like ?', ['%' + searchTerm + '%', '%' + searchTerm + '%', '%' + searchTerm + '%'], (err, rows) => {
         // when done with the connection, release it
         connection.release();
+        //reformate date
+        rows.forEach(row => {
+          row.date_debut = row.date_debut.toLocaleDateString();
+          row.date_fin = row.date_fin.toLocaleDateString();
+        });
 
         if (!err) {
-          res.render('offre-stage', { rows });
+          res.render('offre-stage', { rows, data: { context }});
         } else {
           console.log(err);
         }

@@ -20,42 +20,74 @@ const loginController = {
       "SELECT u.* , s.avatar , s.id as profile_id FROM utilisateur u INNER JOIN stagiaire s ON u.id = s.utilisateur_id WHERE u.email = ?",
       [email],
       (error, results) => {
-        if (error) {
-          console.error(error);
-          return res.status(500).json({ message: "An error occurred" });
+
+        if (results.length !== 0) {
+          const utilisateur = results[0];
+          console.log(results);
+          bcrypt.compare(mot_pass, utilisateur.mot_pass, (err, result) => {
+
+            console.log("mot_pass", typeof (mot_pass));
+            console.log("utilisateur.mot_pass", typeof (utilisateur.mot_pass));
+            if (err) {
+              console.error(err);
+              return res.status(500).json({ message: "An error occurred" });
+            }
+            if (!result) {
+              console.log("mot de passe");
+              return res.status(401).json({ message: "Invalid credentials mot de passe" });
+
+            }
+            req.session.user = {
+              id: utilisateur.id,
+              profile_id: utilisateur.profile_id,
+              nom: utilisateur.nom,
+              prenom: utilisateur.prenom,
+              type_util: utilisateur.type_util,
+              avatar: utilisateur.avatar,
+            };
+            res.cookie("sessionID", req.sessionID, { httpOnly: true });
+            return res.status(200).json({ type_util: utilisateur.type_util });
+
+          });
+        } else {
+          //join utilisateur et societe
+          pool.query(
+            "SELECT u.* , s.url  FROM utilisateur u INNER JOIN societe s ON u.id = s.gerant_id WHERE u.email = ?",
+            [email],
+            (error, results) => {
+              if (results.length === 0) {
+                return res.status(401).json({ message: "Invalid credentials email" });
+              }
+              const utilisateur = results[0];
+              console.log(utilisateur.mot_pass);
+              bcrypt.compare(mot_pass, utilisateur.mot_pass, (err, result) => {
+
+                console.log("mot_pass", typeof (mot_pass));
+                console.log("utilisateur.mot_pass", typeof (utilisateur.mot_pass));
+                if (err) {
+                  console.error(err);
+                  return res.status(500).json({ message: "An error occurred" });
+                }
+                if (!result) {
+                  console.log("mot de passe");
+                  return res.status(401).json({ message: "Invalid credentials mot de passe" });
+
+                }
+                req.session.user = {
+                  id: utilisateur.id,
+                  nom: utilisateur.nom,
+                  prenom: utilisateur.prenom,
+                  type_util: utilisateur.type_util,
+                  url: utilisateur.url,
+                };
+                res.cookie("sessionID", req.sessionID, { httpOnly: true });
+                return res.status(200).json({ type_util: utilisateur.type_util });
+
+              }
+              );
+            }
+          );
         }
-        if (results.length === 0) {
-          console.log("email");
-          return res.status(401).json({ message: "Invalid credentials" });
-        }
-
-        const utilisateur = results[0];
-        console.log(utilisateur.mot_pass);
-        bcrypt.compare(mot_pass, utilisateur.mot_pass, (err, result) => {
-
-          console.log("mot_pass", typeof (mot_pass));
-          console.log("utilisateur.mot_pass", typeof (utilisateur.mot_pass));
-          if (err) {
-            console.error(err);
-            return res.status(500).json({ message: "An error occurred" });
-          }
-          if (!result) {
-            console.log("mot de passe");
-            return res.status(401).json({ message: "Invalid credentials mot de passe" });
-
-          }
-          req.session.user = {
-            id: utilisateur.id,
-            profile_id: utilisateur.profile_id,
-            nom: utilisateur.nom,
-            prenom: utilisateur.prenom,
-            type_util: utilisateur.type_util,
-            avatar: utilisateur.avatar,
-          };
-          res.cookie("sessionID", req.sessionID, { httpOnly: true });
-          return res.status(200).json({ type_util: utilisateur.type_util });
-
-        });
       }
     );
   },
