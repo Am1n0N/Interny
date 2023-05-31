@@ -89,6 +89,14 @@ const offreController = {
             connection.release();
             if (!err) {
               // add id to rows from societe table
+              if (rowsWithUserID.length === 0) {
+                res.render('offre-stage', {
+                  rows,
+                  data: { context }
+                });
+                return;
+              }
+
               const rowsWithUserIDMapped = rows.map(row => {
                 row.id_user = rowsWithUserID[0].id;
                 // formate date 
@@ -137,7 +145,7 @@ const offreController = {
         });
 
         if (!err) {
-          res.render('offre-stage', { rows, data: { context }});
+          res.render('offre-stage', { rows, data: { context } });
         } else {
           console.log(err);
         }
@@ -173,7 +181,7 @@ const offreController = {
         } else {
           console.log(err);
         }
-      }); 
+      });
     });
   },
   editoffre: async (req, res) => {

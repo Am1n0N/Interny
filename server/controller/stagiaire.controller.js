@@ -121,9 +121,8 @@ const stagiaireController = {
       connection.query('UPDATE stagiaire SET niveau = ?, specialite = ?, etablissement = ?, address = ?, description_stagiaire = ?, avatar = ?, telephone = ? WHERE utilisateur_id = ?', [niveau, specialite, etablissement, address, description_stagiaire, avatar, telephone, id], (err, rows) => {
         // when done with the connection, release it
         connection.release();
-
         if (!err) {
-          res.render('inscript-stagiaire',  { data: { context }});
+          res.render('home',  { data: { context }});
         } else {
           console.log(err);
         }
@@ -131,11 +130,6 @@ const stagiaireController = {
         console.log('the data from user table: \n', rows);
 
       });
-      req.session.user = {
-
-
-
-      };
     });
   },
   editform: async (req, res) => {
